@@ -274,6 +274,77 @@ colMeans(x) 表示求每一列的平均值
 colSums(x) 表示求每一列的和
 x <- matrix(rnorm(100),10,10) 表示从服从正态分布的数据中抽取100个数据构成一个10*10的矩阵
 apply(x,1,quantile,probs = c(0.25,0.75)) 表示取出25%和75%的分位点
+x <- array(rnorm(2*3*4),c(2,3,4)) 表示生成一个3维的数组，第三个维度为4.然后每个维度的元素为一个2*3的矩阵
+apply(x,c(1,2),mean) 表示求第一维和第二维的平均值
+```
+
+- mapply(参数)：mapply(函数名/函数，数据，函数相关的参数)，lapply的多元版本
+
+```
+x <- list(rep(1,4),rep(3,2),rep(4,1)) 表示创建一个具有3个元素的列表，其中rep(1,4)表示4个1
+mapply(rep,1:4,4:1) 表示1:4中对应元素重复的次数，比如1重复4次，2重复3次，3重复2次，4重复一次。
+s <- function(n,mean,std){
+  rnorm(n,mean,std)
+}
+该函数的作用是从均值为mean,标准差为std的正太分布中抽取n个数据
+mapply(s,1:5,5:1,2) 表示从1:5中抽取提取对应的数据
+```
+
+- tapply(参数)：tapply(向量，因子/因子列表，函数/函数名)，其是对向量的子集进行操作，
+
+```
+x <- c(rnorm(5),runif(5),rnorm(5,1)) 创建一个3个元素的向量，第一个元素为从服从正太分布的数据中随机取出5个，第二个元素为服从均匀分布的5个数据，第三个元素为均值为5，方差为1的数据中取出5个
+f <- gl(3,5) 表示分为3个水平，每个水平下有5个元素
+tapply(x,f,mean) 表示x按照f来分组，并求出对应组的平均值
+tapply(x,f,mean,simplify = FALSE) 表示把向量转化为列表
+```
+
+- split(参数)：split(向量/列表/数据框/因子/因子列表)，根据因子或者因子列表列表将向量或其他对象分组，通常与lapply一起使用
+
+```
+x <- c(rnorm(5),runif(5),rnorm(5,1)) 创建一个3个元素的向量，第一个元素为从服从正太分布的数据中随机取出5个，第二个元素为服从均匀分布的5个数据，第三个元素为均值为5，方差为1的数据中取出5个
+f <- gl(3,5) 表示分为3个水平，每个水平下有5个元素
+split(x,f) 返回列表，x根据f分为3个组
+lapply(split(x,f),mean) 表示求取分组后的5个数据的平均值
+split(airquality,airquality$Month) 表示按月份查看数据
+table(airquality$Month) 查看其有多少个月份，并且相应的月份下有多少个数据
+lapply(s,function(x) colMeans(x[,c('Ozone','Wind')])) 表示输出相应两列的值，其不存在缺失值
+sapply(s,function(x) colMeans(x[,c('Ozone','Wind')])) 类似于lapply，其结果中存在缺失值
+lapply(s,function(x) colMeans(x[,c('Ozone','Wind')],na.rm=TRUE)) 表示去掉缺失值
+```
+
+- 排序
+- sort:对向量进行排序；返回排好序的内容
+- order:返回排好序的内容的下标/多个排序
+
+```
+df <- data.frame(id = c(1,2,3,4),name = c('lisi','wangwu','zhangsan','lll'),gander = c(TRUE,FALSE,TRUE,TRUE))
+sort(df$name) 表示对name这一列进行排序操作
+sort(df$name,decreasing = TRUE) 表示对name这一列进行排序操作（降序）
+order(df$name) 表示名字对应的行号
+df[order(df$name),] 表示按name对数据框进行排序
+df[order(df$name,df$id),] 表示按照name和id来排序
+df[order(df$name,df$id,decreasing = TRUE),] 表示按照name和id来排序（降序）
+```
+
+- 总结数据信息
+
+```
+head(airquality) 表示前6行的数据
+tail(airquality) 表示后6行的数据
+head(airquality,1) 表示查看前一行的数据
+summary(airquality) 表示返回该数据集的分布情况
+str(airquality) 对该数据进行简单的总结
+table(airquality$Ozone,useNA = 'ifany') 表示对有缺失值的也总结出来
+table(airquality$Ozone,airquality$Solar.R) 表示对两列的数据进行总结
+any(is.na(airquality$Ozone)) 其返回true表示该数据中一定有缺失值
+sum(is.na(airquality$Ozone)) 表示该数据中有多少个缺失值
+all(airquality$Ozone<12) 判断是不是所有的数据都小于2
+aa <- as.data.frame(Titanic) 将泰坦尼克的数据存入aa中
+dd <- xtabs(Freq ~Class + Age,data = aa) 表示查看交叉表的内容
+ftable(dd) 表示将其数据扁平化
+object.size(airquality) 表示输出该数据集有多大
+print(object.size(airquality),units = 'Kb') 表示以Kb的形式输出该变量
 ```
 
 

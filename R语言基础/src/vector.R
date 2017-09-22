@@ -90,6 +90,11 @@ df <- data.frame(id = c(1,2,3,4),name = c('lisi','wangwu','zhangsan','lll'),gand
 
 x <- list(a=matrix(1:6,2,3), b = matrix(4:7,2,2))
 
+x <- array(rnorm(2*3*4),c(2,3,4))
 
+s <- function(n,mean,std){
+  rnorm(n,mean,std)
+}
 
+df <- data.frame(id = c(1,2,3,4),name = c('lisi','wangwu','zhangsan','lll'),gander = c(TRUE,FALSE,TRUE,TRUE))
 
